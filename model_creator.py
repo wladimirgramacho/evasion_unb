@@ -36,7 +36,7 @@ df1['CourseTerm'] = df1.Semester.map(str) + '_' + df1.CodigoMateria.map(str)
 df1 = df1.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
 
 df1 = df1.pivot_table(values='Conceito', index=[
-                      'StudentId', 'StatusFinal'], columns='CourseTerm', aggfunc='sum', fill_value=0)
+                      'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc='sum', fill_value=0)
 df1.columns.name = None
 df1 = df1.reset_index()
 df1.loc[df1['1_114014'] != 0, '1_114626'] = df1['1_114014']
@@ -59,7 +59,7 @@ df2['CourseTerm'] = df2.Semester.map(str) + '_' + df2.CodigoMateria.map(str)
 df2 = df2.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
 
 df2 = df2.pivot_table(values='Conceito', index=[
-                      'StudentId', 'StatusFinal'], columns='CourseTerm', aggfunc='last', fill_value='NC')
+                      'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc='last', fill_value='NC')
 df2.columns.name = None
 df2 = df2.reset_index()
 if '1_114014' in df2: df2.loc[df2['1_114014'] != -1, '1_114626'] = df2['1_114014']
@@ -69,7 +69,7 @@ if '2_114014' in df2: df2.loc[df2['2_114014'] != -1, '2_114634'] = df2['2_114014
 df2.drop(columns=['1_114014', '2_114014'])
 
 # One hot encoding the grade column
-columns = df2.columns.difference(['StatusFinal', 'StudentId']).tolist()
+columns = df2.columns.difference(['StatusFinal', 'IdAluno']).tolist()
 for column in columns:
   one_hot = pd.get_dummies(df2[column])
   df2 = df2.drop(column,axis = 1)

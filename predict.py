@@ -40,7 +40,7 @@ for x in range(10):
   print('--- iteration', x)
   for index, df in enumerate([df1, df2]):
     print('Model', index+1)
-    feature_cols = df.columns.difference(['StatusFinal', 'StudentId'])
+    feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
     features = df.loc[:, feature_cols] # we want all rows and the features columns
     labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
     X_train, X_test, y_train, y_test = train_test_split(
