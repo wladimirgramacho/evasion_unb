@@ -39,10 +39,10 @@ df1 = df1.pivot_table(values='Conceito', index=[
                       'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc='sum', fill_value=0)
 df1.columns.name = None
 df1 = df1.reset_index()
-df1.loc[df1['1_114014'] != 0, '1_114626'] = df1['1_114014']
-df1.loc[df1['1_114014'] != 0, '1_114634'] = df1['1_114014']
-df1.loc[df1['2_114014'] != 0, '2_114626'] = df1['2_114014']
-df1.loc[df1['2_114014'] != 0, '2_114634'] = df1['2_114014']
+if '1_114014' in df1: df1.loc[df1['1_114014'] != 0, '1_114626'] = df1['1_114014']
+if '1_114014' in df1: df1.loc[df1['1_114014'] != 0, '1_114634'] = df1['1_114014']
+if '2_114014' in df1: df1.loc[df1['2_114014'] != 0, '2_114626'] = df1['2_114014']
+if '2_114014' in df1: df1.loc[df1['2_114014'] != 0, '2_114634'] = df1['2_114014']
 df1.drop(columns=['1_114014', '2_114014'])
 df1.to_pickle('first_two_semesters_failed_courses_v2.pkl')
 print('1st model done')
