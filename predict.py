@@ -36,28 +36,34 @@ classifiers = [
   ('DecisionTreeClassifier', tree.DecisionTreeClassifier(), dtree_param_grid)
 ]
 
-for x in range(10):
-  print('--- iteration', x)
-  for index, df in enumerate([df1, df2]):
-    print('Model', index+1)
-    feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
-    features = df.loc[:, feature_cols] # we want all rows and the features columns
-    labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
-    X_train, X_test, y_train, y_test = train_test_split(
-        features, labels, test_size=0.30, stratify=labels, random_state=42)
+for index, df in enumerate([df1, df2]):
+  feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
+  features = df.loc[:, feature_cols] # we want all rows and the features columns
+  labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
+  test_size = 0.30
+  X_train, X_test, y_train, y_test = train_test_split(
+      features, labels, test_size=test_size, stratify=labels, random_state=42)
 
-    for classifier in classifiers:
-      print(classifier[0])
-      grid_search = GridSearchCV(classifier[1], classifier[2], scoring='recall',
-                              cv=10, return_train_score=True)
-      grid_search.fit(X_train.values, y_train.values)
+  print('Model', index+1)
+  print('Dataset - number of columns:', feature_cols.size)
+  print('Dataset - number of rows:', len(features))
+  print('Training size:', len(X_train))
+  print('Test size:', len(X_test))
+  print('\n')
 
-      y_pred = grid_search.predict(X_test.values)
-      print('Best params for recall', grid_search.best_params_)
-      print("recall = %0.4f" % recall_score(y_test, y_pred))
-      print("accuracy = %0.4f" % accuracy_score(y_test, y_pred))
-      # file_name = 'tree' + str(index+1) + '.dot'
-      # tree.export_graphviz(grid_search.best_estimator_, max_depth=1, out_file=file_name, feature_names=list(feature_cols), class_names=['FORMADO', 'EVADIDO'], filled=True, label='root', impurity=False)
 
-    print('\n')
+  for classifier in classifiers:
+    print(classifier[0])
+    grid_search = GridSearchCV(classifier[1], classifier[2], scoring='recall',
+                            cv=10, return_train_score=True)
+    grid_search.fit(X_train.values, y_train.values)
+
+    y_pred = grid_search.predict(X_test.values)
+    print('Best params for recall', grid_search.best_params_)
+    print("recall = %0.4f" % recall_score(y_test, y_pred))
+    print("accuracy = %0.4f" % accuracy_score(y_test, y_pred))
+    # file_name = 'tree' + str(index+1) + '.dot'
+    # tree.export_graphviz(grid_search.best_estimator_, max_depth=1, out_file=file_name, feature_names=list(feature_cols), class_names=['FORMADO', 'EVADIDO'], filled=True, label='root', impurity=False)
+
+  print('\n')
 
