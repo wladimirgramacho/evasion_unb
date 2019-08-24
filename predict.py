@@ -1,13 +1,13 @@
+import pandas as pd
+import numpy as np
+import ignore_warnings
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
-
-import pandas as pd
-import numpy as np
-import ignore_warnings
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, recall_score
 
 df1 = pd.read_pickle('first_two_semesters_failed_courses_v2.pkl')
 df2 = pd.read_pickle('first_two_semesters_grades_v2.pkl')
