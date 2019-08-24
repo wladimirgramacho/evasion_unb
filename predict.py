@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn import tree
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
 
@@ -30,10 +31,16 @@ dtree_param_grid = {
   'max_depth': range(1,15,2)
 }
 
+rf_param_grid = {
+  'criterion': ['gini', 'entropy'],
+  'n_estimators': range(10,200,20)
+}
+
 classifiers = [
   ('LogisticRegression', LogisticRegression(max_iter=300), logreg_param_grid),
   ('MLPClassifier', MLPClassifier(max_iter=1000), mlpc_param_grid),
-  ('DecisionTreeClassifier', tree.DecisionTreeClassifier(), dtree_param_grid)
+  ('DecisionTreeClassifier', tree.DecisionTreeClassifier(), dtree_param_grid),
+  ('RandomForestClassifier', RandomForestClassifier(), rf_param_grid)
 ]
 
 for index, df in enumerate([df1, df2]):
