@@ -19,16 +19,18 @@ logreg_param_grid = {
 }
 
 mlpc_param_grid = {
-  'solver': ['lbfgs', 'adam'],
-  'alpha': np.logspace(-4, 2, 4),
-  'activation': ['logistic', 'relu']
+  'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,)],
+  'activation': ['tanh', 'relu'],
+  'solver': ['sgd', 'adam'],
+  'alpha': [0.0001, 0.05],
+  'learning_rate': ['constant','adaptive'],
 }
+
 
 dtree_param_grid = {
   'criterion': ['gini', 'entropy'],
   'splitter': ['best', 'random'],
-  'min_samples_split' : range(10,200,20),
-  'max_depth': range(1,15,2)
+  'min_samples_split': np.linspace(0.1, 1.0, 10, endpoint=True)
 }
 
 rf_param_grid = {
@@ -38,7 +40,7 @@ rf_param_grid = {
 
 classifiers = [
   ('LogisticRegression', LogisticRegression(max_iter=300), logreg_param_grid),
-  ('MLPClassifier', MLPClassifier(max_iter=1000), mlpc_param_grid),
+  ('MLPClassifier', MLPClassifier(max_iter=100), mlpc_param_grid),
   ('DecisionTreeClassifier', tree.DecisionTreeClassifier(), dtree_param_grid),
   ('RandomForestClassifier', RandomForestClassifier(), rf_param_grid)
 ]
