@@ -4,6 +4,23 @@ import pandas as pd
 
 import sys
 
+def transform_dataframe(dataframe, aggfunc, fill_value):
+  dataframe['CourseTerm'] = dataframe.Semester.map(str) + '_' + dataframe.CodigoMateria.map(str)
+  dataframe = dataframe.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
+
+  dataframe = dataframe.pivot_table(values='Conceito', index=[
+                        'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc=aggfunc, fill_value=fill_value)
+  dataframe.columns.name = None
+  dataframe = dataframe.reset_index()
+  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114626'] = dataframe['1_114014']
+  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114634'] = dataframe['1_114014']
+  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114626'] = dataframe['2_114014']
+  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114634'] = dataframe['2_114014']
+  dataframe.drop(columns=['1_114014', '2_114014'])
+
+  return dataframe
+
+
 df = pd.read_csv(sys.argv[1])
 
 # calculate semester
@@ -30,20 +47,7 @@ print('1st model start')
 df1.Conceito = df1.Conceito.replace(['SR', 'II', 'MI'], 1)
 df1.Conceito = df1.Conceito.replace(['SS', 'MS', 'MM', 'CC', 'DP', 'TR', 'TJ'], 0)
 
-df1['CourseTerm'] = df1.Semester.map(str) + '_' + df1.CodigoMateria.map(str)
-
-# remove unnecessary columns
-df1 = df1.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
-
-df1 = df1.pivot_table(values='Conceito', index=[
-                      'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc='sum', fill_value=0)
-df1.columns.name = None
-df1 = df1.reset_index()
-if '1_114014' in df1: df1.loc[df1['1_114014'] != 0, '1_114626'] = df1['1_114014']
-if '1_114014' in df1: df1.loc[df1['1_114014'] != 0, '1_114634'] = df1['1_114014']
-if '2_114014' in df1: df1.loc[df1['2_114014'] != 0, '2_114626'] = df1['2_114014']
-if '2_114014' in df1: df1.loc[df1['2_114014'] != 0, '2_114634'] = df1['2_114014']
-df1.drop(columns=['1_114014', '2_114014'])
+df1 = transform_dataframe(df1, 'sum', 0)
 df1.to_pickle('first_two_semesters_failed_courses_v2.pkl')
 print('1st model done')
 
@@ -54,18 +58,8 @@ print('1st model done')
 # two semesters courses
 #
 print('2nd model start')
-df2['CourseTerm'] = df2.Semester.map(str) + '_' + df2.CodigoMateria.map(str)
-# remove unnecessary columns
-df2 = df2.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
 
-df2 = df2.pivot_table(values='Conceito', index=[
-                      'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc='last', fill_value='NC')
-df2.columns.name = None
-df2 = df2.reset_index()
-if '1_114014' in df2: df2.loc[df2['1_114014'] != -1, '1_114626'] = df2['1_114014']
-if '1_114014' in df2: df2.loc[df2['1_114014'] != -1, '1_114634'] = df2['1_114014']
-if '2_114014' in df2: df2.loc[df2['2_114014'] != -1, '2_114626'] = df2['2_114014']
-if '2_114014' in df2: df2.loc[df2['2_114014'] != -1, '2_114634'] = df2['2_114014']
+df2 = transform_dataframe(df2, 'last', 'NC')
 df2.drop(columns=['1_114014', '2_114014'])
 
 # One hot encoding the grade column
@@ -76,5 +70,6 @@ for column in columns:
   one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
   df2 = df2.join(one_hot)
 
+import pdb; pdb.set_trace()
 df2.to_pickle('first_two_semesters_grades_v2.pkl')
 print('2nd model done')
