@@ -25,6 +25,15 @@ def transform_dataframe(dataframe, aggfunc, fill_value):
 
   return dataframe
 
+def failed_workload(row):
+  failed_workload = 0
+
+  for code, workload in course_helper.COURSE_CODES_WORKLOAD.items():
+    failed_workload += row['1_' + code] * workload
+    failed_workload += row['2_' + code] * workload
+
+  return failed_workload
+
 
 df = pd.read_csv(sys.argv[1])
 
@@ -37,6 +46,7 @@ df = df[df.CodigoMateria.isin(course_helper.COURSE_CODES_WORKLOAD.keys())]
 
 df1 = df.copy()
 df2 = df.copy()
+df3 = df.copy()
 
 #
 # This is the first model I'll be testing and the idea is
@@ -65,7 +75,6 @@ print('1st model done')
 print('2nd model start')
 
 df2 = transform_dataframe(df2, 'last', 'NC')
-df2.drop(columns=['1_114014', '2_114014'])
 
 # One hot encoding the grade column
 columns = df2.columns.difference(['StatusFinal', 'IdAluno']).tolist()
@@ -77,3 +86,19 @@ for column in columns:
 
 df2.to_pickle('first_two_semesters_grades_v2.pkl')
 print('2nd model done')
+
+#
+# Third model: first model + failed workload
+#
+print('3rd model start')
+
+# discretize course grade
+
+df3.Conceito = df3.Conceito.replace(['SR', 'II', 'MI'], 1)
+df3.Conceito = df3.Conceito.replace(['SS', 'MS', 'MM', 'CC', 'DP', 'TR', 'TJ'], 0)
+
+df3 = transform_dataframe(df3, 'sum', 0)
+df3['Creditos_Reprovados'] = df3.apply(lambda row: failed_workload(row), axis=1)
+
+df3.to_pickle('first_two_semesters_failed_courses_workload_v2.pkl')
+print('3rd model done')
