@@ -94,11 +94,16 @@ print('3rd model start')
 
 # discretize course grade
 
-df3.Conceito = df3.Conceito.replace(['SR', 'II', 'MI'], 1)
-df3.Conceito = df3.Conceito.replace(['SS', 'MS', 'MM', 'CC', 'DP', 'TR', 'TJ'], 0)
+df3 = transform_dataframe(df3, 'last', 'NC')
 
-df3 = transform_dataframe(df3, 'sum', 0)
-df3['Creditos_Reprovados'] = df3.apply(lambda row: failed_workload(row), axis=1)
+# One hot encoding the grade column
+columns = df3.columns.difference(['StatusFinal', 'IdAluno']).tolist()
+for column in columns:
+  one_hot = pd.get_dummies(df3[column])
+  df3 = df3.drop(column,axis = 1)
+  one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
+  df3 = df3.join(one_hot)
 
-df3.to_pickle('first_two_semesters_failed_courses_workload_v2.pkl')
+df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
+df3.to_pickle('first_two_semesters_grades_workload_v2.pkl')
 print('3rd model done')

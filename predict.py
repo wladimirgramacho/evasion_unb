@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score, recall_score
 
 df1 = pd.read_pickle('first_two_semesters_failed_courses_v2.pkl')
 df2 = pd.read_pickle('first_two_semesters_grades_v2.pkl')
+df3 = pd.read_pickle('first_two_semesters_grades_workload_v2.pkl')
 
 logreg_param_grid = {
   'solver': ['liblinear', 'lbfgs'],
@@ -26,7 +27,6 @@ mlpc_param_grid = {
   'learning_rate': ['constant','adaptive'],
 }
 
-
 dtree_param_grid = {
   'criterion': ['gini', 'entropy'],
   'splitter': ['best', 'random'],
@@ -35,17 +35,18 @@ dtree_param_grid = {
 
 rf_param_grid = {
   'criterion': ['gini', 'entropy'],
-  'n_estimators': range(10,200,20)
+  'n_estimators': range(10,200,20),
+  'max_features': ['auto', 'sqrt']
 }
 
 classifiers = [
   ('LogisticRegression', LogisticRegression(max_iter=300), logreg_param_grid),
-  ('MLPClassifier', MLPClassifier(max_iter=100), mlpc_param_grid),
+  # ('MLPClassifier', MLPClassifier(max_iter=100), mlpc_param_grid),
   ('DecisionTreeClassifier', tree.DecisionTreeClassifier(), dtree_param_grid),
   ('RandomForestClassifier', RandomForestClassifier(), rf_param_grid)
 ]
 
-for index, df in enumerate([df1, df2]):
+for index, df in enumerate([df1, df2, df3]):
   feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
   features = df.loc[:, feature_cols] # we want all rows and the features columns
   labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
