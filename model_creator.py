@@ -4,6 +4,15 @@ import pandas as pd
 
 import sys
 
+def remove_old_courses(dataframe):
+  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114626'] = dataframe['1_114014']
+  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114634'] = dataframe['1_114014']
+  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114626'] = dataframe['2_114014']
+  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114634'] = dataframe['2_114014']
+  dataframe.drop(columns=['1_114014', '2_114014'])
+
+  return dataframe
+
 def transform_dataframe(dataframe, aggfunc, fill_value):
   dataframe['CourseTerm'] = dataframe.Semester.map(str) + '_' + dataframe.CodigoMateria.map(str)
   dataframe = dataframe.drop(columns=['SemestreIngresso', 'SemestreMateria', 'CodigoMateria', 'Semester'])
@@ -12,11 +21,7 @@ def transform_dataframe(dataframe, aggfunc, fill_value):
                         'IdAluno', 'StatusFinal'], columns='CourseTerm', aggfunc=aggfunc, fill_value=fill_value)
   dataframe.columns.name = None
   dataframe = dataframe.reset_index()
-  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114626'] = dataframe['1_114014']
-  if '1_114014' in dataframe: dataframe.loc[dataframe['1_114014'] != 0, '1_114634'] = dataframe['1_114014']
-  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114626'] = dataframe['2_114014']
-  if '2_114014' in dataframe: dataframe.loc[dataframe['2_114014'] != 0, '2_114634'] = dataframe['2_114014']
-  dataframe.drop(columns=['1_114014', '2_114014'])
+  remove_old_courses(dataframe)
 
   return dataframe
 
@@ -28,7 +33,7 @@ df['Semester'] = df.apply(lambda x: SC.calculate(x['SemestreIngresso'], x['Semes
 df = df[(df.Semester > 0) & (df.Semester <= 2)]
 
 # filter for courses of two first semesters
-df = df[df.CodigoMateria.isin(course_helper.COURSE_CODES.values())]
+df = df[df.CodigoMateria.isin(course_helper.COURSE_CODES_WORKLOAD.keys())]
 
 df1 = df.copy()
 df2 = df.copy()
@@ -70,6 +75,5 @@ for column in columns:
   one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
   df2 = df2.join(one_hot)
 
-import pdb; pdb.set_trace()
 df2.to_pickle('first_two_semesters_grades_v2.pkl')
 print('2nd model done')
