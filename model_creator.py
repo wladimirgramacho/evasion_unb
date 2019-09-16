@@ -104,6 +104,7 @@ for column in columns:
   one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
   df3 = df3.join(one_hot)
 
+# Failed workload is calculated from the first model (df1)
 df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
 df3.to_pickle('first_two_semesters_grades_workload_v2.pkl')
 print('3rd model done')
