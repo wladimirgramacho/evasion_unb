@@ -25,12 +25,15 @@ def transform_dataframe(dataframe, aggfunc, fill_value):
 
   return dataframe
 
-def failed_workload(row):
+def failed_workload(row, semester=None):
   failed_workload = 0
 
   for code, workload in course_helper.COURSE_CODES_WORKLOAD.items():
-    failed_workload += row['1_' + code] * workload
-    failed_workload += row['2_' + code] * workload
+    if semester == None:
+      failed_workload += row['1_' + code] * workload
+      failed_workload += row['2_' + code] * workload
+    else:
+      failed_workload += row[semester + '_' + code] * workload
 
   return failed_workload
 
@@ -106,5 +109,7 @@ for column in columns:
 
 # Failed workload is calculated from the first model (df1)
 df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
+df3['Creditos_Reprovados_1'] = df1.apply(lambda row: failed_workload(row, '1'), axis=1)
+df3['Creditos_Reprovados_2'] = df1.apply(lambda row: failed_workload(row, '2'), axis=1)
 df3.to_pickle('first_two_semesters_grades_workload_v2.pkl')
 print('3rd model done')
