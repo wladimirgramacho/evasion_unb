@@ -66,7 +66,7 @@ df1.Conceito = df1.Conceito.replace(['SR', 'II', 'MI'], 1)
 df1.Conceito = df1.Conceito.replace(['SS', 'MS', 'MM', 'CC', 'DP', 'TR', 'TJ'], 0)
 
 df1 = transform_dataframe(df1, 'sum', 0)
-df1.to_pickle('first_two_semesters_failed_courses_v2.pkl')
+df1.to_pickle('first_two_semesters_failed_courses.pkl')
 print('1st model done')
 
 #
@@ -87,7 +87,7 @@ for column in columns:
   one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
   df2 = df2.join(one_hot)
 
-df2.to_pickle('first_two_semesters_grades_v2.pkl')
+df2.to_pickle('first_two_semesters_grades.pkl')
 print('2nd model done')
 
 #
@@ -111,5 +111,5 @@ for column in columns:
 df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
 df3['Creditos_Reprovados_1'] = df1.apply(lambda row: failed_workload(row, '1'), axis=1)
 df3['Creditos_Reprovados_2'] = df1.apply(lambda row: failed_workload(row, '2'), axis=1)
-df3.to_pickle('first_two_semesters_grades_workload_v2.pkl')
+df3.to_pickle('first_two_semesters_grades_workload.pkl')
 print('3rd model done')

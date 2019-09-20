@@ -9,9 +9,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, recall_score
 
-df1 = pd.read_pickle('first_two_semesters_failed_courses_v2.pkl')
-df2 = pd.read_pickle('first_two_semesters_grades_v2.pkl')
-df3 = pd.read_pickle('first_two_semesters_grades_workload_v2.pkl')
+df1 = pd.read_pickle('first_two_semesters_failed_courses.pkl')
+df2 = pd.read_pickle('first_two_semesters_grades.pkl')
+df3 = pd.read_pickle('first_two_semesters_grades_workload.pkl')
 
 logreg_param_grid = {
   'solver': ['liblinear', 'lbfgs'],
