@@ -50,6 +50,7 @@ df = df[df.CodigoMateria.isin(course_helper.COURSE_CODES_WORKLOAD.keys())]
 df1 = df.copy()
 df2 = df.copy()
 df3 = df.copy()
+df4 = df.copy()
 
 #
 # This is the first model I'll be testing and the idea is
@@ -108,8 +109,18 @@ for column in columns:
   df3 = df3.join(one_hot)
 
 # Failed workload is calculated from the first model (df1)
-df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
-df3['Creditos_Reprovados_1'] = df1.apply(lambda row: failed_workload(row, '1'), axis=1)
+# df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
+# df3['Creditos_Reprovados_1'] = df1.apply(lambda row: failed_workload(row, '1'), axis=1)
 df3['Creditos_Reprovados_2'] = df1.apply(lambda row: failed_workload(row, '2'), axis=1)
 df3.to_pickle('first_two_semesters_grades_workload.pkl')
 print('3rd model done')
+
+#
+# Fourth model: model for apriori rule association
+#
+
+print('4th model done')
+df4 = df4.drop(columns=['IdAluno', 'SemestreIngresso', 'SemestreFinal', 'SemestreMateria'])
+df4 = df4.applymap(str)
+df4.to_pickle('association_rules_grades.pkl')
+print('4th model done')

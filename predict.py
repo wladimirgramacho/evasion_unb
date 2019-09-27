@@ -9,10 +9,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import accuracy_score, recall_score
 from sklearn.preprocessing import StandardScaler
+from apyori import apriori
 
 df1 = pd.read_pickle('first_two_semesters_failed_courses.pkl')
 df2 = pd.read_pickle('first_two_semesters_grades.pkl')
 df3 = pd.read_pickle('first_two_semesters_grades_workload.pkl')
+df4 = pd.read_pickle('association_rules_grades.pkl')
 
 scaler = StandardScaler()
 
@@ -75,7 +77,11 @@ for index, df in enumerate([df1, df2, df3]):
     print("recall = %0.4f" % recall_score(y_test.values, y_pred))
     print("accuracy = %0.4f" % accuracy_score(y_test.values, y_pred))
     # file_name = 'tree' + str(index+1) + '.dot'
-    # tree.export_graphviz(grid_search.best_estimator_, max_depth=1, out_file=file_name, feature_names=list(feature_cols), class_names=['FORMADO', 'EVADIDO'], filled=True, label='root', impurity=False)
+    # tree.export_graphviz(grid_search.best_estimator_, out_file=file_name, feature_names=list(feature_cols), class_names=['FORMADO', 'EVADIDO'], filled=True, label='root', impurity=False)
 
   print('\n')
+
+rules = apriori(df4.values)
+for rule in rules:
+  print(rule)
 
