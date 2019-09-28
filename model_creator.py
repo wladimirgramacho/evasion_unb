@@ -120,7 +120,16 @@ print('3rd model done')
 #
 
 print('4th model done')
-df4 = df4.drop(columns=['IdAluno', 'SemestreIngresso', 'SemestreFinal', 'SemestreMateria'])
+df4 = df4.drop(columns=['SemestreIngresso', 'SemestreFinal', 'SemestreMateria'])
 df4 = df4.applymap(str)
+
+df4['TermCourseGrade'] = df4.Semester + '_' + df4.CodigoMateria + '_' + df4.Conceito
+df4 = df4.drop(columns=['Conceito', 'CodigoMateria', 'Semester'])
+
+grouped = df4.groupby(['IdAluno', 'StatusFinal'])
+df4 = grouped['TermCourseGrade'].apply(lambda x: pd.Series(x.values)).unstack()
+df4 = df4.reset_index()
+
+df4 = df4.drop(columns=['IdAluno'])
 df4.to_pickle('association_rules_grades.pkl')
 print('4th model done')
