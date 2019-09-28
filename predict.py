@@ -81,7 +81,10 @@ for index, df in enumerate([df1, df2, df3]):
 
   print('\n')
 
-rules = apriori(df4.values)
+rules = apriori(df4.values, min_support=0.01, min_confidence=0.7)
 for rule in rules:
-  print(rule)
+  if 'EVADIDO' in tuple(rule.items):
+    for observation in rule.ordered_statistics:
+      if 'EVADIDO' in tuple(observation.items_add):
+        print(rule)
 
