@@ -1,5 +1,5 @@
 ## Previsor de Evasão Estudantil
-Este projeto pretende identificar se um estudante da Universidade de Brasília irá evadir ou formar a partir do histórico do estudante nas matérias cursadas.
+Este projeto pretende identificar os estudantes da graduação da Universidade de Brasília com risco de evasão a partir do histórico acadêmico.
 
 ### Como usar
 A partir de um arquivo `.csv` seguindo o formato explicado na seção [Entrada](#entrada), crie os modelos de entrada executando a linha:
@@ -13,6 +13,7 @@ Serão criados arquivos `.pkl`, que serão usados pelo previsor. Para executar o
 --------------------------------------------------------------------------------
 
 ### Entrada
+Cada linha do arquivo CSV de entrada deve seguir o formato a seguir:
 
 | IdAluno | SemestreIngresso | SemestreMateria |  CodigoMateria | Conceito | StatusFinal |
 |---------|------------------|-----------------|----------------|----------|-------------|
@@ -25,11 +26,13 @@ Serão criados arquivos `.pkl`, que serão usados pelo previsor. Para executar o
 + **StatusFinal** (*string*): o status do aluno ao final do curso. Os possíveis valores para este campo devem ser:
   + Se formado => `FORMADO`
   + Se evadido => `EVADIDO`
-  + Se ainda está ativo => `ATIVO`
 
-*Obs.: alunos que vieram a falecer não devem ser usados na entrada.*
-
-Para melhores resultados, todos os estudantes devem estar matriculados no mesmo curso. Dessa forma, abaixo temos um exemplo de linha no arquivo `.csv`:
+Dessa forma, um exemplo de linha no arquivo `.csv` é:
 
 | 1234 | 20101 | 20102 |  113034 | "SS" | "FORMADO" |
 |------|-------|-------|---------|------|-----------|
+
+#### Observações
++ **O algoritmo utilizará as matérias que estão nos dados de entrada. Recomenda-se usar as matérias obrigatórias dos dois primeiros semestres do curso.**
++ Alunos que vieram a falecer não devem ser usados na entrada.
++ Todos os estudantes devem estar matriculados no mesmo curso de graduação.
