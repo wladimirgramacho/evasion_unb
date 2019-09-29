@@ -44,9 +44,6 @@ df = pd.read_csv(sys.argv[1])
 df['Semester'] = df.apply(lambda x: SC.calculate(x['SemestreIngresso'], x['SemestreMateria']), axis=1)
 df = df[(df.Semester > 0) & (df.Semester <= 2)]
 
-# filter for courses of two first semesters
-df = df[df.CodigoMateria.isin(course_helper.COURSE_CODES_WORKLOAD.keys())]
-
 df1 = df.copy()
 df2 = df.copy()
 df3 = df.copy()
