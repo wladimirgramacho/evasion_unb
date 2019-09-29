@@ -13,7 +13,7 @@ Serão criados arquivos `.pkl`, que serão usados pelo previsor. Para executar o
 --------------------------------------------------------------------------------
 
 ### Entrada
-Cada linha do arquivo CSV de entrada deve seguir o formato a seguir:
+Cada linha do arquivo CSV de entrada deve seguir o formato:
 
 | IdAluno | SemestreIngresso | SemestreMateria |  CodigoMateria | Conceito | StatusFinal |
 |---------|------------------|-----------------|----------------|----------|-------------|
