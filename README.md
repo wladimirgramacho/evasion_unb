@@ -2,6 +2,21 @@
 Este projeto pretende identificar os estudantes da graduação da Universidade de Brasília com risco de evasão a partir do histórico acadêmico.
 
 ### Como usar
+O código está disponível no [Kaggle](https://www.kaggle.com/wladimirgramacho/previsor-de-evas-o-estudantil?scriptVersionId=21435655) para experimentos. Basta criar uma conta para poder fazer os experimentos com seus dados. Mais informações em [Rodando no Kaggle](#rodando_no_kaggle)
+
+Outra opção é baixar o repositório e rodar o algoritmo na sua máquina. Mais informações em [Rodando localmente](#rodando_localmente)
+
+### Rodando no Kaggle
+
+
+### Rodando Localmente
+Baixe o repositório e entre no diretório:
+
+```
+git clone https://github.com/wladimirgramacho/evasion_unb.git
+cd evasion_unb
+```
+
 A partir de um arquivo `.csv` seguindo o formato explicado na seção [Entrada](#entrada), crie os modelos de entrada executando a linha:
 
 `python3 model_creator.py arquivo.csv`
