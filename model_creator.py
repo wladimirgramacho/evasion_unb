@@ -117,7 +117,7 @@ print('3rd model done')
 #
 
 print('4th model done')
-df4 = df4.drop(columns=['SemestreIngresso', 'SemestreFinal', 'SemestreMateria'])
+df4 = df4.drop(columns=['SemestreIngresso', 'SemestreMateria'])
 df4 = df4.applymap(str)
 
 df4['TermCourseGrade'] = df4.Semester + '_' + df4.CodigoMateria + '_' + df4.Conceito
