@@ -46,7 +46,6 @@ df = df[(df.Semester > 0) & (df.Semester <= 2)]
 
 df1 = df.copy()
 df2 = df.copy()
-df3 = df.copy()
 df4 = df.copy()
 
 #
@@ -95,15 +94,7 @@ print('3rd model start')
 
 # discretize course grade
 
-df3 = transform_dataframe(df3, 'last', 'NC')
-
-# One hot encoding the grade column
-columns = df3.columns.difference(['StatusFinal', 'IdAluno']).tolist()
-for column in columns:
-  one_hot = pd.get_dummies(df3[column])
-  df3 = df3.drop(column,axis = 1)
-  one_hot.columns = map(lambda x: column + '_' + x, one_hot.columns)
-  df3 = df3.join(one_hot)
+df3 = df2.copy()
 
 # Failed workload is calculated from the first model (df1)
 # df3['Creditos_Reprovados'] = df1.apply(lambda row: failed_workload(row), axis=1)
