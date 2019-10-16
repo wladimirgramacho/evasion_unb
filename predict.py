@@ -20,12 +20,12 @@ scaler = StandardScaler()
 
 logreg_param_grid = {
   'solver': ['liblinear', 'lbfgs'],
-  'C': np.logspace(-2, 4, 10),
+  'C': np.logspace(-3, 5, 9),
   # 'penalty': ['l1', 'l2']
 }
 
 mlpc_param_grid = {
-  'alpha': 10.0 ** -np.arange(1, 7)
+  'alpha': 10.0 ** -np.arange(1, 6)
 }
 
 dtree_param_grid = {
@@ -36,8 +36,7 @@ dtree_param_grid = {
 
 rf_param_grid = {
   'criterion': ['gini', 'entropy'],
-  'n_estimators': range(10,200,20),
-  'max_features': ['auto', 'sqrt']
+  'n_estimators': range(10,200,20)
 }
 
 classifiers = [
