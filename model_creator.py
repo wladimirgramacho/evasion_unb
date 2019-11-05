@@ -104,12 +104,14 @@ df3.to_pickle('first_two_semesters_grades_workload.pkl')
 print('3rd model done')
 
 #
-# Fourth model: model for apriori rule association
+# Fourth model: model for apriori rule association with grades
 #
 
-print('4th model done')
+print('4th model start')
 df4 = df4.drop(columns=['SemestreIngresso', 'SemestreMateria'])
 df4 = df4.applymap(str)
+
+df5 = df4.copy()
 
 df4['TermCourseGrade'] = df4.Semester + '_' + df4.CodigoMateria + '_' + df4.Conceito
 df4 = df4.drop(columns=['Conceito', 'CodigoMateria', 'Semester'])
@@ -121,3 +123,23 @@ df4 = df4.reset_index()
 df4 = df4.drop(columns=['IdAluno'])
 df4.to_pickle('association_rules_grades.pkl')
 print('4th model done')
+
+#
+# Fifth model: model for apriori rule association with only approvals and failures
+#
+
+print('5th model start')
+df5.Conceito = df5.Conceito.replace(['SR', 'II', 'MI', 'TR', 'TJ'], 'RP')
+df5.Conceito = df5.Conceito.replace(['SS', 'MS', 'MM', 'CC', 'DP'], 'AP')
+
+df5['TermCourseGrade'] = df5.Semester + '_' + df5.CodigoMateria + '_' + df5.Conceito
+df5 = df5.drop(columns=['Conceito', 'CodigoMateria', 'Semester'])
+
+grouped = df5.groupby(['IdAluno', 'StatusFinal'])
+df5 = grouped['TermCourseGrade'].apply(lambda x: pd.Series(x.values)).unstack()
+df5 = df5.reset_index()
+
+df5 = df5.drop(columns=['IdAluno'])
+df5.to_pickle('association_rules_approved_failed.pkl')
+
+print('5th model done')

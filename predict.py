@@ -15,6 +15,7 @@ df1 = pd.read_pickle('first_two_semesters_failed_courses.pkl')
 df2 = pd.read_pickle('first_two_semesters_grades.pkl')
 df3 = pd.read_pickle('first_two_semesters_grades_workload.pkl')
 df4 = pd.read_pickle('association_rules_grades.pkl')
+df5 = pd.read_pickle('association_rules_approved_failed.pkl')
 
 scaler = StandardScaler()
 
@@ -46,7 +47,7 @@ classifiers = [
   ('RandomForestClassifier', RandomForestClassifier(), rf_param_grid)
 ]
 
-for index, df in enumerate([df1, df2, df3]):
+for index, df in enumerate([]):
   feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
   features = df.loc[:, feature_cols] # we want all rows and the features columns
   labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
@@ -80,9 +81,18 @@ for index, df in enumerate([df1, df2, df3]):
 
   print('\n')
 
-
+print('ASSOCIATION RULES: GRADES')
 records = df4.T.apply(lambda x: x.dropna().tolist()).tolist()
-rules = apriori(records, min_support=0.03, min_confidence=0.9)
+rules = apriori(records, min_support=0.1, min_confidence=0.9)
+for rule in rules:
+  if 'EVADIDO' in tuple(rule.items):
+    for observation in rule.ordered_statistics:
+      if 'EVADIDO' in tuple(observation.items_add):
+        print(rule)
+
+print('ASSOCIATION RULES: APPROVED AND FAILED')
+records = df5.T.apply(lambda x: x.dropna().tolist()).tolist()
+rules = apriori(records, min_support=0.08, min_confidence=0.85)
 for rule in rules:
   if 'EVADIDO' in tuple(rule.items):
     for observation in rule.ordered_statistics:
