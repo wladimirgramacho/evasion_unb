@@ -47,7 +47,7 @@ classifiers = [
   ('RandomForestClassifier', RandomForestClassifier(), rf_param_grid)
 ]
 
-for index, df in enumerate([]):
+for index, df in enumerate([df1, df2, df3]):
   feature_cols = df.columns.difference(['StatusFinal', 'IdAluno'])
   features = df.loc[:, feature_cols] # we want all rows and the features columns
   labels = df.StatusFinal.replace({'EVADIDO': 1, 'FORMADO': 0})  # our label is StatusFinal
@@ -83,7 +83,7 @@ for index, df in enumerate([]):
 
 print('ASSOCIATION RULES: GRADES')
 records = df4.T.apply(lambda x: x.dropna().tolist()).tolist()
-rules = apriori(records, min_support=0.1, min_confidence=0.9)
+rules = apriori(records, min_support=0.03, min_confidence=0.9)
 for rule in rules:
   if 'EVADIDO' in tuple(rule.items):
     for observation in rule.ordered_statistics:
